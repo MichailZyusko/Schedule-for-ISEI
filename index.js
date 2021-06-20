@@ -3,6 +3,7 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const app = express();
 const port = 3000;
+const URL = "http://rsp.iseu.by/Raspisanie/TimeTable/umu.aspx";
 
 app.get("/", (req, res) => {
   res.send({ message: "Hello world!" });
@@ -54,7 +55,7 @@ app.get("/metainfo", async (req, res) => {
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto("http://rsp.iseu.by/Raspisanie/TimeTable/umu.aspx");
+  await page.goto(URL);
 
   if (faculty) {
     // TODO: sequence?
@@ -90,7 +91,7 @@ app.get("/schedule", async (req, res) => {
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto("http://rsp.iseu.by/Raspisanie/TimeTable/umu.aspx");
+  await page.goto(URL);
 
   await selectValueFromDropdown(page, FACULTY_SELECTOR, faculty);
   await selectValueFromDropdown(page, COURSE_SELECTOR, course);
