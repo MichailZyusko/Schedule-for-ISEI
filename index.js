@@ -8,7 +8,8 @@ const URL = "http://rsp.iseu.by/Raspisanie/TimeTable/umu.aspx";
 app.get("/", (req, res) => {
   res.send({
     message: `How you can use it?
-              : Choose your group`,
+              : Choose your group
+              : Choose your course`,
   });
 });
 
