@@ -5,10 +5,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 const URL = "http://rsp.iseu.by/Raspisanie/TimeTable/umu.aspx";
 
-app.listen(port, function () {
-  console.log("Server start successfully");
-});
-
 app.get("/", (req, res) => {
   res.send({ message: "Hello world!" });
 });
