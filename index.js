@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 const URL = "http://rsp.iseu.by/Raspisanie/TimeTable/umu.aspx";
 
 app.get("/", (req, res) => {
-  res.send({ message: "Hello world!" });
+  res.send({ message: "How you can use it?" });
 });
 
 function getOptionsFromSelect(cheerio, selector) {
