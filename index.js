@@ -99,9 +99,7 @@ app.get("/schedule", async (req, res) => {
   await selectValueFromDropdown(page, GROUP_SELECTOR, group);
   await selectValueFromDropdown(page, DATE_SELECTOR, date);
   await page.click('[class="chosen-single button"]');
-
-  // TODO: find a way how to not use hardcoded const (how to detect, whether page was reloaded?)
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await page.evaluateOnNewDocument();
 
   const html = await page.evaluate(() => document.querySelector("*").outerHTML);
   const $ = cheerio.load(html);
