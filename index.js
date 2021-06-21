@@ -9,7 +9,8 @@ app.get("/", (req, res) => {
   res.send({
     message: `How you can use it?
               : Choose your group
-              : Choose your course`,
+              : Choose your course
+              : Choose your department`,
   });
 });
 
