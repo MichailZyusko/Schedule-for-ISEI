@@ -2,8 +2,12 @@ const express = require("express");
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const URL = "http://rsp.iseu.by/Raspisanie/TimeTable/umu.aspx";
+
+app.listen(port, function () {
+  console.log("Server start successfully");
+});
 
 app.get("/", (req, res) => {
   res.send({ message: "Hello world!" });
