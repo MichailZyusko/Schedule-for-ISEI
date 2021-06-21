@@ -58,7 +58,7 @@ app.get("/metainfo", async (req, res) => {
   const { faculty, department, course, group } = req.query;
   console.log(faculty, department, course, group);
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
   const page = await browser.newPage();
   await page.goto(URL);
 
@@ -94,7 +94,7 @@ app.get("/schedule", async (req, res) => {
   const { faculty, department, course, group, date } = req.query;
   console.log(faculty, department, course, group, date);
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
   const page = await browser.newPage();
   await page.goto(URL);
 
