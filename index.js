@@ -29,11 +29,11 @@ function setObjectProperties(elem, className) {
     ?.children[0]?.data.trim();
 }
 
-function setSpecificObjectProperties(elem, number) {
-  return elem.children
-    .find((el) => el.attribs?.class.includes("cell-date"))
-    ?.children[number]?.children[0]?.data.trim();
-}
+// function setSpecificObjectProperties(elem, number) {
+//   return elem?.children
+//     .find((el) => el.attribs?.class.includes("cell-date"))
+//     ?.children[number]?.children[0]?.data.trim();
+// }
 
 function isRowWithScheduleInfo(elem) {
   return (
@@ -110,30 +110,46 @@ app.get("/schedule", async (req, res) => {
   await selectValueFromDropdown(page, GROUP_SELECTOR, group);
   await selectValueFromDropdown(page, DATE_SELECTOR, date);
   await page.click('[class="chosen-single button"]');
-  await page.evaluateOnNewDocument(); // may by not working always
 
-  const html = await page.evaluate(() => document.querySelector("*").outerHTML);
-  const $ = cheerio.load(html);
-  const table = Array.from($("table tbody").children());
-  let dayOfWeek, dayOfMonth;
+  // await page.evaluateOnNewDocument(); // may by not working always
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const schedule = table.filter(isRowWithScheduleInfo).map((elem) => ({
-    DayOfWeek: (dayOfWeek =
-      elem.attribs.class === "row row-spanned"
-        ? setSpecificObjectProperties(elem, 1)
-        : dayOfWeek),
-    DayOfMonth: (dayOfMonth =
-      elem.attribs.class === "row row-spanned"
-        ? setSpecificObjectProperties(elem, 2)
-        : dayOfMonth),
-    Time: setObjectProperties(elem, "cell-time"),
-    Subgroup: setObjectProperties(elem, "cell-subgroup"),
-    Discipline: setObjectProperties(elem, "cell-discipline"),
-    Teacher: setObjectProperties(elem, "cell-staff"),
-    Room: setObjectProperties(elem, "cell-auditory"),
-  }));
+  try {
+    const html = await page.evaluate(
+      () => document.querySelector("*").outerHTML
+    );
+    const $ = cheerio.load(html);
+    const table = Array.from($("table tbody").children());
+    let dayOfWeek, dayOfMonth;
 
-  res.send(schedule);
+    const schedule = table.filter(isRowWithScheduleInfo).map((elem) => ({
+      DayOfWeek: (dayOfWeek =
+        elem.attribs.class === "row row-spanned"
+          ? elem.children
+              .find((el) => el.attribs?.class.includes("cell-date"))
+              ?.children[0]?.children[0]?.data.trim()
+          : dayOfWeek),
+      DayOfMonth: (dayOfMonth =
+        elem.attribs.class === "row row-spanned"
+          ? elem.children
+              .find((el) => el.attribs?.class.includes("cell-date"))
+              ?.children[2]?.children[0]?.data.trim()
+          : dayOfMonth),
+      Time: setObjectProperties(elem, "cell-time"),
+      Subgroup: setObjectProperties(elem, "cell-subgroup"),
+      Discipline: setObjectProperties(elem, "cell-discipline"),
+      Teacher: setObjectProperties(elem, "cell-staff"),
+      Room: setObjectProperties(elem, "cell-auditory"),
+    }));
+
+    res.send(schedule);
+  } catch (error) {
+    console.log(error);
+  }
+
+  // const html = await page.evaluate(() => document.querySelector("*").outerHTML);
+  // const $ = cheerio.load(html);
+  // const table = Array.from($("table tbody").children());
 });
 
 app.listen(port, () => {
