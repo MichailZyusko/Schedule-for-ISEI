@@ -29,12 +29,6 @@ function setObjectProperties(elem, className) {
     ?.children[0]?.data.trim();
 }
 
-// function setSpecificObjectProperties(elem, number) {
-//   return elem?.children
-//     .find((el) => el.attribs?.class.includes("cell-date"))
-//     ?.children[number]?.children[0]?.data.trim();
-// }
-
 function isRowWithScheduleInfo(elem) {
   return (
     elem.name === "tr" &&
@@ -64,10 +58,7 @@ app.get("/metainfo", async (req, res) => {
   const { faculty, department, course, group } = req.query;
   console.log(faculty, department, course, group);
 
-  const browser = await puppeteer.launch({
-    headless: false,
-    args: ["--no-sandbox"],
-  });
+  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
   const page = await browser.newPage();
   await page.goto(URL);
 
@@ -103,10 +94,7 @@ app.get("/schedule", async (req, res) => {
   const { faculty, department, course, group, date } = req.query;
   console.log(faculty, department, course, group, date);
 
-  const browser = await puppeteer.launch({
-    headless: false,
-    args: ["--no-sandbox"],
-  });
+  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
   const page = await browser.newPage();
   await page.goto(URL);
 
@@ -116,42 +104,31 @@ app.get("/schedule", async (req, res) => {
   await selectValueFromDropdown(page, GROUP_SELECTOR, group);
   await selectValueFromDropdown(page, DATE_SELECTOR, date);
   await page.click('[class="chosen-single button"]');
+  await page.evaluateOnNewDocument();
 
-  await page.evaluateOnNewDocument(); // may by not working always
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  const html = await page.evaluate(() => document.querySelector("*").outerHTML);
+  const $ = cheerio.load(html);
+  const table = $("#TT");
+  let day;
 
-  try {
-    const html = await page.evaluate(
-      () => document.querySelector("*").outerHTML
-    );
-    const $ = cheerio.load(html);
-    const table = Array.from($("table tbody").children());
-    let dayOfWeek, dayOfMonth;
-
-    const schedule = table.filter(isRowWithScheduleInfo).map((elem) => ({
-      DayOfWeek: (dayOfWeek =
+  const schedule = table[0].children[2].children
+    .filter(isRowWithScheduleInfo)
+    .map((elem) => ({
+      date: (day =
         elem.attribs.class === "row row-spanned"
           ? elem.children
               .find((el) => el.attribs?.class.includes("cell-date"))
               ?.children[0]?.children[0]?.data.trim()
-          : dayOfWeek),
-      DayOfMonth: (dayOfMonth =
-        elem.attribs.class === "row row-spanned"
-          ? elem.children
-              .find((el) => el.attribs?.class.includes("cell-date"))
-              ?.children[2]?.children[0]?.data.trim()
-          : dayOfMonth),
-      Time: setObjectProperties(elem, "cell-time"),
-      Subgroup: setObjectProperties(elem, "cell-subgroup"),
-      Discipline: setObjectProperties(elem, "cell-discipline"),
-      Teacher: setObjectProperties(elem, "cell-staff"),
-      Room: setObjectProperties(elem, "cell-auditory"),
+          : day),
+
+      time: setObjectProperties(elem, "cell-time"),
+      subgroup: setObjectProperties(elem, "cell-subgroup"),
+      discipline: setObjectProperties(elem, "cell-discipline"),
+      teacher: setObjectProperties(elem, "cell-staff"),
+      room: setObjectProperties(elem, "cell-auditory"),
     }));
 
-    res.send(schedule);
-  } catch (error) {
-    console.log(error);
-  }
+  res.send(schedule);
 });
 
 app.listen(port, () => {
