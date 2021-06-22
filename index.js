@@ -64,7 +64,10 @@ app.get("/metainfo", async (req, res) => {
   const { faculty, department, course, group } = req.query;
   console.log(faculty, department, course, group);
 
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ["--no-sandbox"],
+  });
   const page = await browser.newPage();
   await page.goto(URL);
 
@@ -100,7 +103,10 @@ app.get("/schedule", async (req, res) => {
   const { faculty, department, course, group, date } = req.query;
   console.log(faculty, department, course, group, date);
 
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ["--no-sandbox"],
+  });
   const page = await browser.newPage();
   await page.goto(URL);
 
@@ -146,10 +152,6 @@ app.get("/schedule", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-
-  // const html = await page.evaluate(() => document.querySelector("*").outerHTML);
-  // const $ = cheerio.load(html);
-  // const table = Array.from($("table tbody").children());
 });
 
 app.listen(port, () => {
