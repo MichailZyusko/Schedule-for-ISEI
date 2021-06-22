@@ -29,6 +29,12 @@ function setObjectProperties(elem, className) {
     ?.children[0]?.data.trim();
 }
 
+function setSpecificObjectProperties(elem, number) {
+  return elem.children
+    .find((el) => el.attribs?.class.includes("cell-date"))
+    ?.children[number]?.children[0]?.data.trim();
+}
+
 function isRowWithScheduleInfo(elem) {
   return (
     elem.name === "tr" &&
@@ -106,26 +112,25 @@ app.get("/schedule", async (req, res) => {
   await page.click('[class="chosen-single button"]');
   await page.evaluateOnNewDocument(); // may by not working always
 
-  const html = await page.evaluate(
-    () => document?.querySelector("*")?.outerHTML
-  );
-  const $ = cheerio?.load(html);
+  const html = await page.evaluate(() => document.querySelector("*").outerHTML);
+  const $ = cheerio.load(html);
   const table = Array.from($("table tbody").children());
-  let day;
+  let dayOfWeek, dayOfMonth;
 
   const schedule = table.filter(isRowWithScheduleInfo).map((elem) => ({
-    date: (day =
+    DayOfWeek: (dayOfWeek =
       elem.attribs.class === "row row-spanned"
-        ? elem.children
-            .find((el) => el.attribs?.class.includes("cell-date"))
-            ?.children[0]?.children[0]?.data.trim()
-        : day),
-
-    time: setObjectProperties(elem, "cell-time"),
-    subgroup: setObjectProperties(elem, "cell-subgroup"),
-    discipline: setObjectProperties(elem, "cell-discipline"),
-    teacher: setObjectProperties(elem, "cell-staff"),
-    room: setObjectProperties(elem, "cell-auditory"),
+        ? setSpecificObjectProperties(elem, 1)
+        : dayOfWeek),
+    DayOfMonth: (dayOfMonth =
+      elem.attribs.class === "row row-spanned"
+        ? setSpecificObjectProperties(elem, 2)
+        : dayOfMonth),
+    Time: setObjectProperties(elem, "cell-time"),
+    Subgroup: setObjectProperties(elem, "cell-subgroup"),
+    Discipline: setObjectProperties(elem, "cell-discipline"),
+    Teacher: setObjectProperties(elem, "cell-staff"),
+    Room: setObjectProperties(elem, "cell-auditory"),
   }));
 
   res.send(schedule);
