@@ -111,8 +111,8 @@ app.get("/schedule", async (req, res) => {
   await selectValueFromDropdown(page, DATE_SELECTOR, date);
   await page.click('[class="chosen-single button"]');
 
-  // await page.evaluateOnNewDocument(); // may by not working always
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await page.evaluateOnNewDocument(); // may by not working always
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   try {
     const html = await page.evaluate(
