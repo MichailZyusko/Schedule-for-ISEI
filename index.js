@@ -58,7 +58,10 @@ app.get("/metainfo", async (req, res) => {
   const { faculty, department, course, group } = req.query;
   console.log(faculty, department, course, group);
 
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox, '--disable-setuid-sandbox'"],
+    ignoreDefaultArgs: ["--disable-extensions"],
+  });
   const page = await browser.newPage();
   await page.goto(URL);
 
@@ -92,9 +95,27 @@ app.get("/metainfo", async (req, res) => {
  */
 app.get("/schedule", async (req, res) => {
   const { faculty, department, course, group, date } = req.query;
-  console.log(faculty, department, course, group, date);
+  console.log("================================");
+  console.log(
+    "Faculty:",
+    faculty,
+    "\nDepartment:",
+    department,
+    "\nCourse:",
+    course,
+    "\nGroup:",
+    group,
+    "\nDate:",
+    date
+  );
 
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+  const start = new Date();
+  console.log("Start:", start);
+
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox, '--disable-setuid-sandbox'"],
+    ignoreDefaultArgs: ["--disable-extensions"],
+  });
   const page = await browser.newPage();
   await page.goto(URL);
 
@@ -112,7 +133,7 @@ app.get("/schedule", async (req, res) => {
   const table = $("#TT");
   let dayOfWeek, dayOfMonth;
 
-  const schedule = table[0].children[2].children
+  const schedule = table[0]?.children[2]?.children
     .filter(isRowWithScheduleInfo)
     .map((elem) => ({
       DayOfWeek: (dayOfWeek =
@@ -137,6 +158,10 @@ app.get("/schedule", async (req, res) => {
   await browser.close();
 
   res.send(schedule);
+  const end = new Date();
+  console.log("End:", end);
+  console.log("Time:", end - start);
+  console.log("================================");
 });
 
 app.listen(port, () => {
