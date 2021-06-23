@@ -104,28 +104,34 @@ app.get("/schedule", async (req, res) => {
   await selectValueFromDropdown(page, GROUP_SELECTOR, group);
   await selectValueFromDropdown(page, DATE_SELECTOR, date);
   await page.click('[class="chosen-single button"]');
-  await page.evaluateOnNewDocument();
+  // await page.evaluateOnNewDocument();
+  await new Promise((resolve) => setTimeout(resolve, 10000));
 
   const html = await page.evaluate(() => document.querySelector("*").outerHTML);
   const $ = cheerio.load(html);
   const table = $("#TT");
-  let day;
+  let dayOfWeek, dayOfMonth;
 
   const schedule = table[0].children[2].children
     .filter(isRowWithScheduleInfo)
     .map((elem) => ({
-      date: (day =
+      DayOfWeek: (dayOfWeek =
         elem.attribs.class === "row row-spanned"
           ? elem.children
               .find((el) => el.attribs?.class.includes("cell-date"))
               ?.children[0]?.children[0]?.data.trim()
-          : day),
-
-      time: setObjectProperties(elem, "cell-time"),
-      subgroup: setObjectProperties(elem, "cell-subgroup"),
-      discipline: setObjectProperties(elem, "cell-discipline"),
-      teacher: setObjectProperties(elem, "cell-staff"),
-      room: setObjectProperties(elem, "cell-auditory"),
+          : dayOfWeek),
+      DayOfMonth: (dayOfMonth =
+        elem.attribs.class === "row row-spanned"
+          ? elem.children
+              .find((el) => el.attribs?.class.includes("cell-date"))
+              ?.children[2]?.children[0]?.data.trim()
+          : dayOfMonth),
+      Time: setObjectProperties(elem, "cell-time"),
+      Subgroup: setObjectProperties(elem, "cell-subgroup"),
+      Discipline: setObjectProperties(elem, "cell-discipline"),
+      Teacher: setObjectProperties(elem, "cell-staff"),
+      Room: setObjectProperties(elem, "cell-auditory"),
     }));
 
   res.send(schedule);
