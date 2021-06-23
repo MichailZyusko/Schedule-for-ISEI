@@ -104,8 +104,8 @@ app.get("/schedule", async (req, res) => {
   await selectValueFromDropdown(page, GROUP_SELECTOR, group);
   await selectValueFromDropdown(page, DATE_SELECTOR, date);
   await page.click('[class="chosen-single button"]');
-  // await page.evaluateOnNewDocument();
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+  await page.evaluateOnNewDocument();
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const html = await page.evaluate(() => document.querySelector("*").outerHTML);
   const $ = cheerio.load(html);
