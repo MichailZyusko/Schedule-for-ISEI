@@ -134,6 +134,8 @@ app.get("/schedule", async (req, res) => {
       Room: setObjectProperties(elem, "cell-auditory"),
     }));
 
+  await browser.close();
+
   res.send(schedule);
 });
 
