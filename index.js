@@ -122,9 +122,11 @@ app.get("/schedule", async (req, res) => {
   await selectValueFromDropdown(page, DEPARTMENT_SELECTOR, department);
   await selectValueFromDropdown(page, GROUP_SELECTOR, group);
   await selectValueFromDropdown(page, DATE_SELECTOR, date);
-  await page.click('[class="chosen-single button"]');
+  await page.click('[class="chosen-single button"]', {
+    waitUntil: "domcontentloaded",
+  });
   // await page.evaluateOnNewDocument();
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const html = await page.evaluate(() => document.querySelector("*").outerHTML);
   const $ = cheerio.load(html);
