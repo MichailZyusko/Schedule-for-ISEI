@@ -25,14 +25,13 @@ function getOptionsFromSelect(cheerio, selector) {
 
 function setObjectProperties(elem, className) {
   return elem.children
-    .find((el) => el.attribs?.class.includes(className))
+    .find((el) => el?.attribs?.class.includes(className))
     ?.children[0]?.data.trim();
 }
 
 function isRowWithScheduleInfo(elem) {
   return (
-    elem.name === "tr" &&
-    (elem.attribs.class === "row" || elem.attribs.class === "row row-spanned")
+    elem.attribs.class === "row" || elem.attribs.class === "row row-spanned"
   );
 }
 
@@ -110,7 +109,6 @@ app.get("/schedule", async (req, res) => {
   );
 
   const start = new Date();
-  console.log("Start:", start);
 
   const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -129,10 +127,11 @@ app.get("/schedule", async (req, res) => {
 
   const html = await page.evaluate(() => document.querySelector("*").outerHTML);
   const $ = cheerio.load(html);
-  const table = $("#TT");
+  const table = $("#TT > tbody > tr");
+
   let dayOfWeek, dayOfMonth;
 
-  const schedule = table[0]?.children[2]?.children
+  const schedule = Array.from(table)
     .filter(isRowWithScheduleInfo)
     .map((elem) => ({
       DayOfWeek: (dayOfWeek =
@@ -157,9 +156,8 @@ app.get("/schedule", async (req, res) => {
   await browser.close();
 
   res.send(schedule);
-  const end = new Date();
-  console.log("End:", end);
-  console.log("Time:", end - start);
+
+  console.log("Time:", new Date() - start);
   console.log("================================");
 });
 
