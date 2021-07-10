@@ -11,6 +11,7 @@ app.get("/", (req, res) => {
               : Choose your group
               : Choose your course
               : Choose your department`,
+    firstStep: "Choose your group",
   });
 });
 
