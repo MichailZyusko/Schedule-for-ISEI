@@ -5,6 +5,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 const host = 'localhost';
 
+app.get('/', () => {
+  console.log(`Example app listening at http://${host}:${port}/app`);
+});
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
