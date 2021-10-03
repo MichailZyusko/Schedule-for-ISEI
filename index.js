@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 const host = 'localhost';
 
 app.get('/', (req, res) => {
-  res.send({ message: `v1.0 Example app listening at http://${host}:${port}/app` });
+  res.send({ message: `v1.0.0 Example app listening at http://${host}:${port}/app` });
 });
 
 app.use(express.urlencoded({ extended: true }));
