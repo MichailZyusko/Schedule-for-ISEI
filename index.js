@@ -6,8 +6,8 @@ const port = process.env.PORT || 3000;
 const host = 'localhost';
 
 app.get('/', (req, res) => {
-  console.log(`v1.0.3 Example app listening at http://${host}:${port}/app`);
-  res.send({ message: `v1.0.3 Example app listening at http://${host}:${port}/app` });
+  console.log(`v1.0.4 Example app listening at http://${host}:${port}/app`);
+  res.send({ message: `v1.0.4 Example app listening at http://${host}:${port}/app` });
 });
 
 app.use(express.urlencoded({ extended: true }));
@@ -17,5 +17,5 @@ app.use('/app', express.static('src/public'));
 app.use('/', router);
 
 app.listen(port, host, () => {
-  console.log(`Example app listening at http://${host}:${port}/app`);
+  console.log(`Example app listening at http://${host}:${port}`);
 });
