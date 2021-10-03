@@ -1,113 +1,106 @@
-import puppeteer from "puppeteer";
-import cheerio from "cheerio";
-import constants from '../../constants.js'
+import puppeteer from 'puppeteer';
+import cheerio from 'cheerio';
 
-function setObjectProperties(elem, className) {
-  return elem.children
-    .find((el) => el.attribs.class.includes(className))
-    .children[0].data.trim();
+import constants from '../../constants.js';
+import selectValueFromDropdown from './helper/selectValueFromDropdown.js';
+import isRowWithScheduleInfo from './helper/isRowWithScheduleInfo.js';
+import dateFormatter from './helper/dateFormater.js';
+import setTime from './helper/setTime.js';
+import setPlace from './helper/setPlace.js';
+import setLessonInfo from './helper/setLessonInfo.js';
+import setDayOfWeek from './helper/setDayOfWeek.js';
+import setDayOfMonth from './helper/setDayOfMonth.js';
+
+class DTO {
+  constructor({
+    body: {
+      faculties, departments, courses, groups, dates,
+    },
+  }) {
+    this.faculties = faculties;
+    this.departments = departments;
+    this.courses = courses;
+    this.groups = groups;
+    this.dates = dateFormatter(dates.split('-W'));
+  }
 }
 
-function isRowWithScheduleInfo(elem) {
-  return (
-    elem.attribs.class === 'row' || elem.attribs.class === 'row row-spanned'
-  );
-}
+// Попробовать вынести отдельно инициализацию браузера
+// const createBrowser = () => puppeteer.launch().then((result) => result);
+//
+// const browser = createBrowser();
 
-async function selectValueFromDropdown(page, selector, value) {
-  await page.select(selector, value);
-  await page.waitForNavigation();
-}
+export default async (req, res) => {
+  try {
+    console.time('Response time');
+    const {
+      faculties, departments, courses, groups, dates,
+    } = new DTO(req);
 
-export default async (req, res, next) => {
-  const {
-    faculties, departments, courses, groups, dates,
-  } = req.body;
-  console.log('================================');
-  console.log(
-    'Faculty:',
-    faculties,
-    '\nDepartment:',
-    departments,
-    '\nCourse:',
-    courses,
-    '\nGroup:',
-    groups,
-    '\nDate:',
-    dates,
-  );
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-  const start = new Date();
+    // Помогает фильтровать и получать только HTML игнорируя CSS and JS
+    // await page.setRequestInterception(true);
+    // page.on('request', (request) => {
+    //   if (request.resourceType() === 'document') {
+    //     request.continue();
+    //   } else {
+    //     request.abort();
+    //   }
+    // });
 
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
-  const page = await browser.newPage();
-  await page.goto(constants.URL);
+    await page.goto(constants.URL);
 
-  await selectValueFromDropdown(page, constants.FACULTY_SELECTOR, faculties);
-  await selectValueFromDropdown(page, constants.COURSE_SELECTOR, courses);
-  await selectValueFromDropdown(page, constants.DEPARTMENT_SELECTOR, departments);
-  await selectValueFromDropdown(page, constants.GROUP_SELECTOR, groups);
-  await selectValueFromDropdown(page, constants.DATE_SELECTOR, dates);
-  await page.click('[class="chosen-single button"]', {
-    waitUntil: 'domcontentloaded',
-  });
-  // await page.evaluateOnNewDocument();
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
+    await selectValueFromDropdown(page, constants.FACULTY_SELECTOR, faculties);
+    await selectValueFromDropdown(page, constants.DEPARTMENT_SELECTOR, departments);
+    await selectValueFromDropdown(page, constants.COURSE_SELECTOR, courses);
+    await selectValueFromDropdown(page, constants.GROUP_SELECTOR, groups);
+    await selectValueFromDropdown(page, constants.DATE_SELECTOR, dates);
 
-  const html = await page.evaluate(() => document.querySelector('*').outerHTML);
-  const $ = cheerio.load(html);
-  const table = $('#TT > tbody > tr');
+    await page.click('[class="chosen-single button"]');
+    // await page.evaluateOnNewDocument(undefined, undefined);
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  let dayOfWeek;
-  let dayOfMonth;
+    const html = await page.evaluate(() => document.querySelector('*').outerHTML);
+    const $ = cheerio.load(html);
+    const table = $('#TT > tbody > tr');
 
-  // const schedule = Array.from(table)
-  //   .filter(isRowWithScheduleInfo)
-  //   .map((elem) => ({
-  //     DayOfWeek: (dayOfWeek = elem.attribs.class === 'row row-spanned'
-  //       ? elem.children
-  //         .find((el) => el.attribs?.class.includes('cell-date'))
-  //         .children[0].children[0].data.trim()
-  //       : dayOfWeek),
-  //     DayOfMonth: (dayOfMonth = elem.attribs.class === 'row row-spanned'
-  //       ? elem.children
-  //         .find((el) => el.attribs.class.includes('cell-date'))
-  //         .children[2].children[0].data.trim()
-  //       : dayOfMonth),
-  //     Time: setObjectProperties(elem, 'cell-time'),
-  //     Subgroup: setObjectProperties(elem, 'cell-subgroup'),
-  //     Discipline: setObjectProperties(elem, 'cell-discipline'),
-  //     Teacher: setObjectProperties(elem, 'cell-staff'),
-  //     Room: setObjectProperties(elem, 'cell-auditory'),
-  //   }));
-  const schedule = Array.from(table)
-    .filter(isRowWithScheduleInfo)
-    .map((elem) => ({
-      DayOfWeek: (dayOfWeek =
-        elem.attribs.class === "row row-spanned"
-          ? elem.children
-            .find((el) => el.attribs?.class.includes("cell-date"))
-            ?.children[0]?.children[0]?.data.trim()
-          : dayOfWeek),
-      DayOfMonth: (dayOfMonth =
-        elem.attribs.class === "row row-spanned"
-          ? elem.children
-            .find((el) => el.attribs?.class.includes("cell-date"))
-            ?.children[2]?.children[0]?.data.trim()
-          : dayOfMonth),
-      Time: setObjectProperties(elem, "cell-time"),
-      Subgroup: setObjectProperties(elem, "cell-subgroup"),
-      Discipline: setObjectProperties(elem, "cell-discipline"),
-      Teacher: setObjectProperties(elem, "cell-staff"),
-      Room: setObjectProperties(elem, "cell-auditory"),
-    }));
+    const timeTable = [];
 
-  await browser.close();
+    Array.from(table)
+      .filter(isRowWithScheduleInfo)
+      .forEach((elem) => {
+        if (elem.attribs.class === 'row row-spanned') {
+          timeTable.push({
+            dayOfWeek: setDayOfWeek(elem),
+            dayOfMonth: setDayOfMonth(elem),
+            schedule: [],
+          });
+        }
 
-  res.send(schedule);
+        timeTable[timeTable.length - 1]?.schedule.push({
+          time: setTime(elem),
+          place: setPlace(elem),
+          subgroup: setLessonInfo(elem, 'cell-subgroup'),
+          discipline: setLessonInfo(elem, 'cell-discipline'),
+          teacher: setLessonInfo(elem, 'cell-staff'),
+        });
+      });
 
-  console.log('Time:', new Date() - start);
-  console.log('================================');
-}
+    await page.close();
+
+    res.send(timeTable);
+
+    if (timeTable.length) {
+      console.log('\n', '=====================================');
+      console.table({
+        faculties, departments, courses, groups, dates,
+      });
+      console.timeEnd('Response time');
+      console.log('=====================================', '\n');
+    } else { throw new Error('puppeteer not working'); }
+  } catch (e) {
+    console.error(e);
+  }
+};

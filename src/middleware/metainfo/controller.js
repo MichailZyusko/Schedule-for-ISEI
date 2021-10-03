@@ -1,7 +1,6 @@
-import puppeteer from "puppeteer";
-import cheerio from "cheerio";
-import constants from '../../constants.js'
-
+import puppeteer from 'puppeteer';
+import cheerio from 'cheerio';
+import constants from '../../constants.js';
 
 function getOptionsFromSelect(cheerio, selector) {
   return cheerio(selector)[0]
@@ -13,10 +12,7 @@ function getOptionsFromSelect(cheerio, selector) {
 }
 
 export default async (req, res, next) => {
-  const {
-    faculty, department, course, group,
-  } = req.query;
-  console.log(faculty, department, course, group);
+  const { faculty, department, course } = req.query;
 
   const browser = await puppeteer.launch({
     args: ["--no-sandbox, '--disable-setuid-sandbox'"],
@@ -57,4 +53,4 @@ export default async (req, res, next) => {
       message: 'Bad request',
     });
   }
-}
+};

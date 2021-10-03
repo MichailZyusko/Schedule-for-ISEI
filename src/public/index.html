@@ -4,22 +4,214 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <title>Scheduler</title>
 </head>
-<body>
-    <form>
-        <input type="text" list="faculty" placeholder="Faculty" id="inputFaculty">
-        <datalist id="faculty"></datalist>
-        <input type="text" list="department" placeholder="Department" id="inputDepartment">
-        <datalist id="department"></datalist>
-        <input type="text" list="course" placeholder="Course" id="inputCourse">
-        <datalist id="course"></datalist>
-        <input type="text" list="group" placeholder="Group" id="inputGroup">
-        <datalist id="group"></datalist>
-        <input type="text" list="date" placeholder="Date" id="inputDate">
-        <datalist id="date"></datalist>
-    </form>
-    <button id="showButton">Show</button>
+<body id="body">
+        <div class="wrapper" style="display: flex">
+            <select class="form-select input" id="faculty">
+                <option value="" hidden>Факультет</option>
+            </select>
+            <select class="form-select input" id="department">
+                <option value="" disabled selected hidden>Форма обучения</option>
+            </select>
+            <select class="form-select input" id="course">
+                <option value="" disabled selected hidden>Курс</option>
+            </select>
+            <select class="form-select input" id="group">
+                <option value="" disabled selected hidden>Группа</option>
+            </select>
+<!--            <input type="text" class="form-select input" list="faculty" placeholder="Факультет" id="inputFaculty">-->
+<!--            <datalist id="faculty"></datalist>-->
+<!--            <input type="text" class="form-select input" list="department" placeholder="Department" id="inputDepartment">-->
+<!--            <datalist id="department"></datalist>-->
+<!--            <input type="text" class="form-select input" list="course" placeholder="Course" id="inputCourse">-->
+<!--            <datalist id="course"></datalist>-->
+<!--            <input type="text" class="form-select input" list="group" placeholder="Group" id="inputGroup">-->
+<!--            <datalist id="group"></datalist>-->
+            <input type="week" class="form-select input" id="week" onchange="alert(this.value)">
+            <button id="showButton">Показать</button>
+        </div>
+        <div class="text-center" id="spinner">
+            <div class="spinner-border spinner" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+<div class="frame" id="frame">
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" id="carouselInner">
+<!--            <div>-->
+<!--                <div class="date">-->
+<!--                    <div class="day-of-week">Среда</div>-->
+<!--                    <div class="day-of-month">22.09.2021</div>-->
+<!--                </div>-->
+<!--                <div class="schedule" >-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="bubel">-->
+<!--                        <div class="time">-->
+<!--                            <div>09:35</div>-->
+<!--                            <div>10:55</div>-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="lesson">-->
+<!--                            Физическая культура-->
+<!--                        </div>-->
+<!--                        <div class="vl"></div>-->
+<!--                        <div class="place">-->
+<!--                            <div>407</div>-->
+<!--                            <div>K1</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+<!--        <div class="frame">-->
+<!--            <div class="date">-->
+<!--                <div class="day-of-week">Среда</div>-->
+<!--                <div class="day-of-month">22.09.2021</div>-->
+<!--            </div>-->
+<!--            <div class="bubel">-->
+<!--                <div class="time">-->
+<!--                    <div>09:35</div>-->
+<!--                    <div>10:55</div>-->
+<!--                </div>-->
+<!--                <div class="vl"></div>-->
+<!--                <div class="lesson">-->
+<!--                    Физическая культура-->
+<!--                </div>-->
+<!--                <div class="vl"></div>-->
+<!--                <div class="place">-->
+<!--                    <div>407</div>-->
+<!--                    <div>K1</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <input type="text" list="faculty" placeholder="Faculty" id="inputFaculty">-->
+<!--        <datalist id="faculty"></datalist>-->
+<!--        <input type="text" list="department" placeholder="Department" id="inputDepartment">-->
+<!--        <datalist id="department"></datalist>-->
+<!--        <input type="text" list="course" placeholder="Course" id="inputCourse">-->
+<!--        <datalist id="course"></datalist>-->
+<!--        <input type="text" list="group" placeholder="Group" id="inputGroup">-->
+<!--        <datalist id="group"></datalist>-->
+<!--        <input type="text" list="date" placeholder="Date" id="inputDate">-->
+<!--        <datalist id="date"></datalist>-->
 </body>
 <script type="module" src="./index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 </html>

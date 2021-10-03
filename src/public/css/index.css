@@ -1,0 +1,131 @@
+@import url ('https://fonts.googleapis.com/css2? family = Play & display = swap');
+
+#body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background: #4E4A59;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: space-around;
+    border-bottom: 1px solid #CDCCD199;
+    border-top: 1px solid #CDCCD199;
+    margin: 30px;
+    padding: 10px;
+}
+
+.spinner {
+    width: 3rem !important;
+    height: 3rem !important;
+
+}
+
+#carouselInner {
+}
+
+.frame{
+    display: none;
+    background: rgba(163, 161, 167, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    width: 28%;
+    height: 80vh;
+    align-self: center;
+    padding: 20px;
+}
+
+.bubel {
+    background: #E4DCD9;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    margin: 0px 10px 10px 10px;
+}
+
+.time{
+    margin: 10px;
+    width: 10%;
+}
+
+.place {
+    margin: 10px;
+    width: 10%;
+}
+
+.vl{
+    background: white;
+    width: 1px;
+    height: 7vh;
+    margin: 5px;
+}
+
+.lesson {
+    width: 75%;
+    margin: 10px 15px;
+    align-self: center;
+}
+
+.input{
+    border: 1px solid rgba(205, 204, 209, 0.6);
+    width: 12% !important;
+    /*font-family: Play !important;*/
+    /*font-style: normal !important;*/
+    /*font-weight: normal !important;*/
+    /*font-size: 28px !important;*/
+    /*line-height: 32px !important;*/
+}
+
+.day-of-month {
+    font-family: Play;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 28px;
+
+    color: #FFFFFF;
+}
+
+.day-of-week {
+    font-family: Play;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 36px;
+    line-height: 42px;
+
+    color: #F87B44;
+    margin-bottom: 20px;
+}
+
+.date {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #FFF;
+    margin: 20px 35px;
+}
+
+#showButton {
+    background: #EC692F;
+    border-radius: 15px;
+    border: none;
+    color: white;
+    width: 10%;
+
+    font-family: Play;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 28px;
+    line-height: 32px;
+}
+
+.schedule {
+    overflow: scroll;
+    max-height: 60vh;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}

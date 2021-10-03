@@ -1,6 +1,6 @@
-import {Router} from 'express';
-import metainfo from '../middleware/metainfo/index.js'
-import schedule from '../middleware/schedule/index.js'
+import { Router } from 'express';
+import metainfo from '../middleware/metainfo/index.js';
+import schedule from '../middleware/schedule/index.js';
 
 const router = Router();
 
