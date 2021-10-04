@@ -2,12 +2,12 @@ import express from 'express';
 import router from './src/router/index.js';
 
 const app = express();
-const port = process.env.PORT || 3000;
-const host = 'localhost';
+const PORT = process.env.PORT || 3000;
+const host = '0.0.0.0';
 
 app.get('/', (req, res) => {
-  console.log(`v1.0.4 Example app listening at http://${host}:${port}`);
-  res.send({ message: `v1.0.4 Example app listening at http://${host}:${port}` });
+  console.log(`v1.0.6 Example app listening at http://${host}:${PORT}`);
+  res.send({ message: `v1.0.6 Example app listening at http://${host}:${PORT}` });
 });
 
 app.use(express.urlencoded({ extended: true }));
@@ -16,6 +16,6 @@ app.use(express.json());
 app.use('/app', express.static('src/public'));
 app.use('/', router);
 
-app.listen(port, host, () => {
-  console.log(`Example app listening at http://${host}:${port}`);
+app.listen(PORT, host, () => {
+  console.log(`Example app listening at http://${host}:${PORT}`);
 });
