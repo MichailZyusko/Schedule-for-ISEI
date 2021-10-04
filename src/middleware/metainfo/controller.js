@@ -15,8 +15,7 @@ export default async (req, res, next) => {
   const { faculty, department, course } = req.query;
 
   const browser = await puppeteer.launch({
-    args: ["--no-sandbox, '--disable-setuid-sandbox'"],
-    ignoreDefaultArgs: ['--disable-extensions'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
   await page.goto(constants.URL);
