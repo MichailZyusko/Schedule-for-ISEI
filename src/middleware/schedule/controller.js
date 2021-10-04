@@ -33,6 +33,7 @@ class DTO {
 export default async (req, res) => {
   try {
     console.time('Response time');
+    console.log(req.body);
     const {
       faculties, departments, courses, groups, dates,
     } = new DTO(req);
