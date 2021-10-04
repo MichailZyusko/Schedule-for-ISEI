@@ -37,7 +37,9 @@ export default async (req, res) => {
       faculties, departments, courses, groups, dates,
     } = new DTO(req);
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
 
     // Помогает фильтровать и получать только HTML игнорируя CSS and JS

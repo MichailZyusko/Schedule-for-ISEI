@@ -2,8 +2,8 @@ import puppeteer from 'puppeteer';
 import cheerio from 'cheerio';
 import constants from '../../constants.js';
 
-function getOptionsFromSelect(cheerio, selector) {
-  return cheerio(selector)[0]
+function getOptionsFromSelect($, selector) {
+  return $(selector)[0]
     .children.filter((elem) => elem.name === 'option')
     .map((elem) => ({
       id: elem.attribs.value,
