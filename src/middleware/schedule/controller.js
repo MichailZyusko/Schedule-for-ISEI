@@ -33,7 +33,7 @@ class DTO {
 export default async (req, res) => {
   try {
     console.time('Response time');
-    console.log(req.query);
+    console.table(req.query);
     const {
       faculties, departments, courses, groups, dates,
     } = new DTO(req);
@@ -62,7 +62,7 @@ export default async (req, res) => {
     await selectValueFromDropdown(page, constants.DATE_SELECTOR, dates);
 
     await page.click('[class="chosen-single button"]');
-    // await page.evaluateOnNewDocument(undefined, undefined);
+    await page.evaluateOnNewDocument(undefined, undefined);
     // await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const html = await page.evaluate(() => document.querySelector('*').outerHTML);
