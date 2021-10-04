@@ -5,11 +5,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 
-app.get('/', (req, res) => {
-  console.log(`v1.0.10 Example app listening at http://${HOST}:${PORT}`);
-  res.send({ message: `v1.0.10 Example app listening at http://${HOST}:${PORT}` });
-});
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

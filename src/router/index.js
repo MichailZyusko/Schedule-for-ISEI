@@ -6,13 +6,13 @@ const router = Router();
 
 router.route('/metainfo')
   .get(
-    // metainfo.isValid,
+    metainfo.isValid,
     metainfo.controller,
   );
 
 router.route('/schedule')
   .get(
-    // schedule.isValid,
+    schedule.isValid,
     schedule.controller,
   );
 

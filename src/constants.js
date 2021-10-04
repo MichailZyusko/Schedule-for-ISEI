@@ -12,4 +12,4 @@ export default {
   GROUP_SELECTOR,
   DATE_SELECTOR,
   URL,
-}
+};

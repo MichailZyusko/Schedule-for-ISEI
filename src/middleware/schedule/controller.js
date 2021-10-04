@@ -4,26 +4,12 @@ import cheerio from 'cheerio';
 import constants from '../../constants.js';
 import selectValueFromDropdown from './helper/selectValueFromDropdown.js';
 import isRowWithScheduleInfo from './helper/isRowWithScheduleInfo.js';
-import dateFormatter from './helper/dateFormater.js';
+
 import setTime from './helper/setTime.js';
 import setPlace from './helper/setPlace.js';
 import setLessonInfo from './helper/setLessonInfo.js';
 import setDayOfWeek from './helper/setDayOfWeek.js';
 import setDayOfMonth from './helper/setDayOfMonth.js';
-
-class DTO {
-  constructor({
-    query: {
-      faculties, departments, courses, groups, dates,
-    },
-  }) {
-    this.faculties = faculties;
-    this.departments = departments;
-    this.courses = courses;
-    this.groups = groups;
-    this.dates = dateFormatter(dates.split('-W'));
-  }
-}
 
 // Попробовать вынести отдельно инициализацию браузера
 // const createBrowser = () => puppeteer.launch().then((result) => result);
@@ -33,10 +19,7 @@ class DTO {
 export default async (req, res) => {
   try {
     console.time('Response time');
-    console.table(req.query);
-    const {
-      faculties, departments, courses, groups, dates,
-    } = new DTO(req);
+    console.table(req.data);
 
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -55,11 +38,11 @@ export default async (req, res) => {
 
     await page.goto(constants.URL);
 
-    await selectValueFromDropdown(page, constants.FACULTY_SELECTOR, faculties);
-    await selectValueFromDropdown(page, constants.DEPARTMENT_SELECTOR, departments);
-    await selectValueFromDropdown(page, constants.COURSE_SELECTOR, courses);
-    await selectValueFromDropdown(page, constants.GROUP_SELECTOR, groups);
-    await selectValueFromDropdown(page, constants.DATE_SELECTOR, dates);
+    await selectValueFromDropdown(page, constants.FACULTY_SELECTOR, req.data.faculties);
+    await selectValueFromDropdown(page, constants.DEPARTMENT_SELECTOR, req.data.departments);
+    await selectValueFromDropdown(page, constants.COURSE_SELECTOR, req.data.courses);
+    await selectValueFromDropdown(page, constants.GROUP_SELECTOR, req.data.groups);
+    await selectValueFromDropdown(page, constants.DATE_SELECTOR, req.data.dates);
 
     await page.click('[class="chosen-single button"]');
     await page.evaluateOnNewDocument(undefined, undefined);
@@ -97,9 +80,7 @@ export default async (req, res) => {
 
     if (timeTable.length) {
       console.log('\n', '=====================================');
-      console.table({
-        faculties, departments, courses, groups, dates,
-      });
+      console.table(req.data);
       console.timeEnd('Response time');
       console.log('=====================================', '\n');
     } else { throw new Error('puppeteer not working'); }
