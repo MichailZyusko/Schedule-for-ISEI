@@ -13,7 +13,7 @@ import setDayOfMonth from './helper/setDayOfMonth.js';
 
 class DTO {
   constructor({
-    body: {
+    query: {
       faculties, departments, courses, groups, dates,
     },
   }) {
@@ -33,7 +33,7 @@ class DTO {
 export default async (req, res) => {
   try {
     console.time('Response time');
-    console.log(req.body);
+    console.log(req.query);
     const {
       faculties, departments, courses, groups, dates,
     } = new DTO(req);

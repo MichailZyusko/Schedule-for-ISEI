@@ -11,7 +11,7 @@ router.route('/metainfo')
   );
 
 router.route('/schedule')
-  .post(
+  .get(
     // schedule.isValid,
     schedule.controller,
   );
