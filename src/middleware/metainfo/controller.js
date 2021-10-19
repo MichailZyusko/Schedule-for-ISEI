@@ -5,6 +5,9 @@ import selectValueFromDropdown from '../schedule/helper/selectValueFromDropdown.
 import getOptionsFromSelect from './helper/getOptionsFromSelect.js';
 
 export default async (req, res) => {
+  console.time('Response time');
+  console.table(req.data);
+
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
@@ -31,4 +34,9 @@ export default async (req, res) => {
   });
 
   await browser.close();
+
+  console.log('\n', '=====================================');
+  console.table(req.data);
+  console.timeEnd('Response time');
+  console.log('=====================================', '\n');
 };

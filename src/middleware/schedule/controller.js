@@ -90,7 +90,7 @@ export default async (req, res) => {
           });
         });
 
-      await page.close();
+      await browser.close();
 
       if (timeTable.length) {
         res.send(timeTable);
