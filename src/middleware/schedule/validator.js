@@ -11,7 +11,7 @@ class DTO {
     this.departments = departments;
     this.courses = courses;
     this.groups = groups;
-    this.dates = dateFormatter(dates.split('-W'));
+    this.dates = dateFormatter(dates);
   }
 }
 
