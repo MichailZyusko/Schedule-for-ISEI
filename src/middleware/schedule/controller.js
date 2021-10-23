@@ -13,6 +13,14 @@ import setDayOfMonth from './helper/setDayOfMonth.js';
 
 const cache = new Map();
 
+let browser;
+
+(async () => {
+  browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+})();
+
 // Попробовать вынести отдельно инициализацию браузера
 // const createBrowser = () => puppeteer.launch().then((result) => result);
 //
@@ -32,14 +40,14 @@ export default async (req, res) => {
       console.timeEnd('Response time');
       console.log('=====================================', '\n');
     } else {
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-        ],
-      });
+      // const browser = await puppeteer.launch({
+      //   headless: true,
+      //   args: [
+      //     '--no-sandbox',
+      //     '--disable-setuid-sandbox',
+      //     '--disable-dev-shm-usage',
+      //   ],
+      // });
       const page = await browser.newPage();
 
       // // Помогает фильтровать и получать только HTML игнорируя CSS and JS
@@ -90,7 +98,7 @@ export default async (req, res) => {
           });
         });
 
-      await browser.close();
+      await page.close();
 
       if (timeTable.length) {
         res.send(timeTable);
