@@ -1,5 +1,6 @@
 import validator from 'validator';
 import dateFormatter from './helper/dateFormater.js';
+import ApiError from '../../errors/apiErrors.js';
 
 class DTO {
   constructor({
@@ -30,20 +31,19 @@ export default async (req, res, next) => {
     } = new DTO(req);
 
     if (!(faculties && departments && courses && groups && dates)) {
-      throw new Error('Bad request');
-      // throw new ApiError(400, 'Bad request');
+      throw new ApiError(400, 'Bad request');
     }
 
     if (!isValid({
       faculties, departments, courses, groups, dates,
     })) {
-      throw new Error('Bad request');
-      // throw new ApiError(400, 'Not valid form data');
+      throw new ApiError(400, 'Not valid form data');
     }
 
     req.data = {
       faculties, departments, courses, groups, dates,
     };
+
     next();
   } catch (error) {
     next(error);

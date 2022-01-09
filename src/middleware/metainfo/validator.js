@@ -1,4 +1,5 @@
 import validator from 'validator';
+import ApiError from '../../errors/apiErrors.js';
 
 class DTO {
   constructor({
@@ -23,18 +24,17 @@ export default async (req, res, next) => {
     } = new DTO(req);
 
     if (!(faculty && department && course)) {
-      throw new Error('Bad request');
-      // throw new ApiError(400, 'Bad request');
+      throw new ApiError(400, 'Bad request');
     }
 
     if (!isValid({ faculty, department, course })) {
-      throw new Error('Bad request');
-      // throw new ApiError(400, 'Not valid form data');
+      throw new ApiError(400, 'Not valid form data');
     }
 
     req.data = {
       faculty, department, course,
     };
+
     next();
   } catch (error) {
     next(error);

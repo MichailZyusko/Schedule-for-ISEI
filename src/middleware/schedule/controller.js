@@ -1,6 +1,4 @@
-import puppeteer from 'puppeteer';
 import cheerio from 'cheerio';
-
 import constants from '../../constants.js';
 import selectValueFromDropdown from './helper/selectValueFromDropdown.js';
 import isRowWithScheduleInfo from './helper/isRowWithScheduleInfo.js';
@@ -10,23 +8,16 @@ import setPlace from './helper/setPlace.js';
 import setLessonInfo from './helper/setLessonInfo.js';
 import setDayOfWeek from './helper/setDayOfWeek.js';
 import setDayOfMonth from './helper/setDayOfMonth.js';
+import createBrowser from '../../browser.js';
 
 const cache = new Map();
-
-let browser;
-
-(async () => {
-  browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
-})();
 
 // Попробовать вынести отдельно инициализацию браузера
 // const createBrowser = () => puppeteer.launch().then((result) => result);
 //
 // const browser = createBrowser();
 
-export default async (req, res) => {
+export default async (req, res, next) => {
   try {
     console.time('Response time');
     console.table(req.data);
@@ -40,14 +31,7 @@ export default async (req, res) => {
       console.timeEnd('Response time');
       console.log('=====================================', '\n');
     } else {
-      // const browser = await puppeteer.launch({
-      //   headless: true,
-      //   args: [
-      //     '--no-sandbox',
-      //     '--disable-setuid-sandbox',
-      //     '--disable-dev-shm-usage',
-      //   ],
-      // });
+      const browser = await createBrowser();
       const page = await browser.newPage();
 
       // // Помогает фильтровать и получать только HTML игнорируя CSS and JS
@@ -113,5 +97,6 @@ export default async (req, res) => {
     }
   } catch (e) {
     console.error(e);
+    next(e);
   }
 };
