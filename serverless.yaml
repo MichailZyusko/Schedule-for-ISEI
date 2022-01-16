@@ -6,6 +6,9 @@ provider:
   stage: dev
   region: us-east-2
 
+plugins:
+  - serverless-offline
+
 functions:
   app:
     handler: index.handler
