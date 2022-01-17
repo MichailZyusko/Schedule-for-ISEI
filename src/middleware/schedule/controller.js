@@ -53,7 +53,8 @@ export default async (req, res, next) => {
       await selectValueFromDropdown(page, constants.DATE_SELECTOR, req.data.dates);
 
       await page.click('[class="chosen-single button"]');
-      await page.evaluateOnNewDocument(undefined, undefined);
+      await page.waitForNavigation();
+      // await page.evaluateOnNewDocument(undefined, undefined);
       // await new Promise((resolve) => setTimeout(resolve, 5000));
 
       const html = await page.evaluate(() => document.querySelector('*').outerHTML);
